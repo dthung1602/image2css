@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/dthung1602/image2css/pkg"
 	"image"
-	image2css "image2css/pkg"
 	"os"
 	"strings"
 )
