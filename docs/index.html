@@ -1,0 +1,128 @@
+<html lang="en">
+<head>
+    <!--  Meta  -->
+    <meta charSet="utf-8"/>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Image2CSS</title>
+
+    <!--  JS & CSS  -->
+    <link rel="stylesheet" href="style/normalize.css">
+    <link rel="stylesheet" href="style/styles.css">
+    <script src="wasm_exec.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.10.0/ace.js"
+            integrity="sha512-7s3F2rOCm3IxjF8NjYsmlhE8gNOiaj2i9Uq6MZch73ApkLH2/iuoB7q3Z4NFiS8GTmRhyHKSKulosEgwDZf2Iw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!--  Style output  -->
+    <style id="style-output">
+    </style>
+</head>
+<body>
+
+<h1>Image<span>2</span><span>CSS</span></h1>
+<p>Convert image to pure CSS art</p>
+<div class="controller">
+    <div>
+        <label for="file-input">File</label>
+        <input type="file" id="file-input" onchange="processImage()">
+    </div>
+    <div>
+        <label for="width-input">Width</label>
+        <input type="number" id="width-input" min="8" max="512" value="256" onchange="processImage()">
+    </div>
+    <div><label for="height-input">Height</label>
+        <input type="number" id="height-input" min="8" max="512" value="256" onchange="processImage()">
+    </div>
+    <div><label for="resolution-input">Resolution</label>
+        <input type="number" id="resolution-input" min="1" max="16" value="4" onchange="processImage()">
+    </div>
+</div>
+
+<div id="target-wrapper">
+    <div id="target-inner-wrapper">
+        <div id="target"></div>
+        <div id="frame"></div>
+    </div>
+</div>
+<div class="css-output">
+    <div><h2>CSS</h2></div>
+    <div id="code">
+/* Choose an image to see the css */
+    </div>
+</div>
+
+<div id="dividing-line">
+    <img src="img/dividing-line-single.png" alt="">
+</div>
+<footer>
+    <div>
+        <a href="https://github.com/dthung1602/image2css" target="_blank">
+            <img class="icon" src="img/icon-github.svg" alt="Github">
+        </a>
+        <a href="mailto:dthung1602@gmail.com" target="_blank">
+            <img class="icon" src="img/icon-email.svg" alt="Email">
+        </a>
+        <a href="https://pkg.go.dev/github.com/dthung1602/image2css/image2css" target="_blank">
+            <img class="icon" src="img/icon-golang.svg" alt="GoPackage">
+        </a>
+    </div>
+    <div>
+        <a href="https://www.pinterest.com/">Images</a>
+        <a href="https://fontawesome.com/icons">Icons</a>
+        <a href="https://www.freefontspro.com/14296/black-chancery.ttf">Fonts</a>
+        <a href="https://github.com/jaysalvat/image2css">OG PHP implementation</a>
+    </div>
+</footer>
+
+</body>
+<script>
+    const go = new Go();
+    WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+        go.run(result.instance);
+    });
+
+    const fileInput = document.getElementById("file-input")
+    const widthInput = document.getElementById("width-input")
+    const heightInput = document.getElementById("height-input")
+    const resolutionInput = document.getElementById("resolution-input")
+    const styleOutput = document.getElementById("style-output")
+    const frame = document.getElementById("frame")
+    const target = document.getElementById("target")
+
+    function debounce(func, timeout = 300) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                func.apply(this, args);
+            }, timeout);
+        };
+    }
+
+    const cssEditor = ace.edit("code");
+    cssEditor.setTheme("ace/theme/twilight");
+    cssEditor.setFontSize(15)
+    cssEditor.session.setMode("ace/mode/css");
+    cssEditor.setReadOnly(true);
+
+    const processImage = debounce(async () => {
+        const image = await fileInput.files[0].arrayBuffer()
+        const width = parseInt(widthInput.value)
+        const height = parseInt(heightInput.value)
+        const css = window.image2css({
+            image: new Uint8Array(image),
+            byteLength: image.byteLength,
+            width,
+            height,
+            resolution: parseInt(resolutionInput.value),
+            selector: "#target"
+        })
+        styleOutput.innerText = css;
+        frame.style.width = `${Math.round(width * 1.25)}px`;
+        frame.style.height = `${Math.round(height * 1.25)}px`;
+        target.style.transform = `translate(${Math.round(width * 0.125)}px, ${Math.round(height * 0.125)}px)`;
+        cssEditor.session.setValue(css);
+    })
+</script>
+</html>
