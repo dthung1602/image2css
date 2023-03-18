@@ -66,21 +66,22 @@ go get github.com/dthung1602/image2css
 package main
 
 import (
+    "os"
     "image"
-    "github.com/dthung1602/image2css/image2css"
+    image2css "github.com/dthung1602/image2css/pkg"
 )
 
 
 func main() {
-    img := // read image from somewhere
-    img = image2css.ScaleImage(img, width, height) // Rescale the image if you like
+    f, _ := os.Open("path/to/image.png")
+    img, _, _ := image.Decode(f)
+    img = image2css.ScaleImage(img, 300, 400) // Rescale the image if you like
 
-    resolution = 4
-    cssSelector = "#my-image"
+    resolution := 4
+    cssSelector := "#my-image"
     css := image2css.GenCSS(img, resolution, cssSelector)
     // do something with the css string
 }
-
 ```
 
 

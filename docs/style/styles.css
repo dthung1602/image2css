@@ -16,7 +16,7 @@ body {
             rgba(0, 0, 0, 0.5),
             rgba(0, 0, 0, 0.5)
     ),
-    url("../img/antique-background.jpg");
+    url("../img/antique-background.webp");
     background-size: 100% auto;
     font-family: "Black Chancery", Arial, sans-serif;
     color: var(--brown-1);
@@ -148,11 +148,33 @@ p {
     gap: 1rem;
 }
 
+.css-output h2 {
+    padding: 0 1rem;
+    text-shadow: 2px 2px black;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    font-weight: bolder;
+}
+
 #code {
     width: 700px;
     height: 400px;
     border: 1px solid var(--brown-1);
     border-radius: 0.5rem;
+}
+
+/* Build with */
+
+#built-with {
+    text-align: center;
+    margin: 3rem 0;
+    padding: 1rem;
+}
+
+#built-with img {
+    height: 1rem;
+    transform: translateY(5px);
 }
 
 /* Footer */
@@ -162,13 +184,15 @@ p {
 }
 
 #dividing-line img {
-    width: 70%;
-    height: 35px;
+    width: 60%;
+    height: 40px;
     transform: translateY(5px);
 }
 
 footer {
-    background: #140c08;
+    /*background: #140c08;*/
+    background-image: linear-gradient(rgba(20, 12, 8, 0.9), rgba(20, 12, 8, 1));
+    box-shadow: 0 0 15px 10px rgba(20, 12, 8, 1);
     padding: 2rem;
     text-align: center;
     display: flex;
