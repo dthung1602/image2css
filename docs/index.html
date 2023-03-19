@@ -142,6 +142,8 @@
         const image = await fileInput.files[0].arrayBuffer()
         const width = parseInt(widthInput.value)
         const height = parseInt(heightInput.value)
+
+        const startTime = new Date()
         const css = window.image2css({
             image: new Uint8Array(image),
             byteLength: image.byteLength,
@@ -150,6 +152,8 @@
             resolution: parseInt(resolutionInput.value),
             selector: "#target"
         })
+        console.log(`Total WASM time: ${new Date() - startTime}ms`)
+
         styleOutput.innerText = css;
         frame.style.width = `${Math.round(width * 1.25)}px`;
         frame.style.height = `${Math.round(height * 1.25)}px`;

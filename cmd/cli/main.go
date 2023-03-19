@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/dthung1602/image2css/pkg"
 	"image"
+	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 type Args struct {
@@ -21,8 +23,12 @@ type Args struct {
 func main() {
 	args := parseArgs()
 	img := getImageFromFilePath(args.imagePath)
+
+	startTime := time.Now()
 	img = image2css.ScaleImage(img, args.width, args.height)
 	css := image2css.GenCSS(img, args.resolution, args.selector)
+	log.Println("Process time:", time.Since(startTime))
+
 	writeCss(css, args.outputPath)
 }
 
